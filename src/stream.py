@@ -1,7 +1,7 @@
 import cv2
 from cv2.cv2 import VideoCapture
 
-from src.retrieve_video import get_video
+from src.shutterstock import get_video
 
 url = get_video("url")
 
