@@ -1,4 +1,5 @@
 import re
+from typing import List
 
 import rake_nltk
 import pyaudio
@@ -6,16 +7,52 @@ from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from google.oauth2 import service_account
+from rake_nltk import Metric
 from six.moves import queue
-
+import numpy as np
 from src.shutterstock_utils import get_video
 
 credentials = service_account.Credentials. from_service_account_file(r'C:\Users\Evan6\Downloads\My First Project-4397387e7cb5.json')
-
+QQQ=16
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
 
+
+def find_deg(l, x):
+    t = len(l)
+    for i in l:
+        t += i.count(" ")
+    q = t
+    for i, e in enumerate(l):
+        if re.search(fr'\b({x})\b', e, re.I):
+            return (q - (e.count(" "))/(2*t)) / t
+        q -= 1 + e.count(" ")
+    return 0.0
+def find_freq(l,x):
+    if x in l:
+        return 1-l.index(x)/len(l)
+    return 0.25
+def get_important(splitted:List[str]):
+    freq_r = rake_nltk.Rake(max_length=3, ranking_metric=Metric.WORD_FREQUENCY)
+    freq_r.extract_keywords_from_text(" and ".join(splitted))
+    freq_phrases = freq_r.get_ranked_phrases()
+
+    deg_r = rake_nltk.Rake(max_length=3, ranking_metric=Metric.WORD_DEGREE)
+    deg_r.extract_keywords_from_text(" ".join(splitted))
+    deg_phrases=deg_r.get_ranked_phrases()
+
+    freq_data={i:find_freq(freq_phrases,i.lower()) for i in splitted}
+    deg_data={i: find_deg(deg_phrases,i.lower()) for i in splitted}
+    data={}
+    for k,freq_v in freq_data.items():
+        deg_v=deg_data[k]
+        data[k]=freq_v+deg_v
+    print(deg_phrases)
+    print(deg_data)
+    print(freq_phrases)
+    print(freq_data)
+    return [j[0] for j in sorted(data.items(),key=lambda i:-i[1])[:3]]
 
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
@@ -97,8 +134,8 @@ def listen_print_loop(responses):
     the next result to overwrite it, until the response is a final one. For the
     final one, print a newline to preserve the finalized transcription.
     """
-    num_chars_printed = 0
     total=""
+    print("AAAAAAAAA")
     for response in responses:
         if not response.results:
             continue
@@ -112,17 +149,18 @@ def listen_print_loop(responses):
 
         # Display the transcription of the top alternative.
         transcript = result.alternatives[0].transcript
-        r = rake_nltk.Rake(max_length=3)
-        phrases=[]
-        if (total+transcript).count(" ")>10:
-            r.extract_keywords_from_text(" ".join((total+transcript).split(" ")[-10:]))
-            print(total+transcript)
-            phrases=r.get_ranked_phrases()
-        print(phrases)
-        if phrases:
-            print(get_video(phrases[0]))
+        # print("t",total+transcript)
+        if (total+transcript).count(" ")>=QQQ:
+            phrases=(total+" "+transcript).split()[-QQQ:-1]
+        else:
+            phrases=(total+" "+transcript).split()
+        phrase=get_important(phrases)
+        # print(total+" "+transcript)
+        print("phrase",phrase)
+        print("phrases",phrases)
+        print(get_video(phrase))
         if result.is_final:
-            total+=transcript
+            total+=" "+transcript
             # print(transcript + overwrite_chars)
 
             # Exit recognition if any of the transcribed phrases could be
@@ -133,11 +171,13 @@ def listen_print_loop(responses):
 
 
 def main():
+    print("START")
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
     language_code = 'en-US'  # a BCP-47 language tag
 
     client = speech.SpeechClient(credentials=credentials)
+    print("CLIENTED")
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
@@ -145,6 +185,7 @@ def main():
     streaming_config = types.StreamingRecognitionConfig(
         config=config,
         interim_results=True)
+    print("WITH")
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
         requests = (types.StreamingRecognizeRequest(audio_content=content)
