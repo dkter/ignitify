@@ -35,9 +35,10 @@ async def play_video(cap):
     cap.release()
 
 
-async def get_video():
+async def get_video(speechrecognizer):
     loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, get_video_blocking)
+    url = await speechrecognizer.get_video()
+    return await loop.run_in_executor(None, cv2.VideoCapture, url)
 
 
 async def play_videos(speechrecognizer):
@@ -46,11 +47,9 @@ async def play_videos(speechrecognizer):
     loop = asyncio.get_event_loop()
     while True:
         print("Getting video !!!!!!!!!!!!!!!!!!!")
-        url_task = asyncio.create_task(speechrecognizer.get_video())
-        cap_task = asyncio.ensure_future(loop.run_in_executor(None, cv2.VideoCapture, url))
+        cap_task = asyncio.create_task(get_video(speechrecognizer))
         print("p")
         await play_video(cap)
-        url = await url_task
         cap = await cap_task
 
 
