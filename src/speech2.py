@@ -6,8 +6,19 @@ import asyncio
 from shutterstock_utils import get_video
 from text_analysis import get_important
 from speech_key import speech_key
+import random
 
-from src.speech import QQQ
+from speech import QQQ
+
+videos = [
+    "videos/1.mp4",
+    "videos/2.mp4",
+    "videos/3.mp4",
+    "videos/4.mp4",
+    "videos/5.mp4",
+    "videos/6.mp4",
+    "videos/7.mp4",
+]
 
 service_region = "eastus2"
 
@@ -25,7 +36,7 @@ def get_token():
 
 
 class SpeechRecognizer:
-    url = "https://billwurtz.com/snail-time.mp4"
+    url = random.choice(videos)
     speech_thing = ""
     total=""
     async def get_video(self):

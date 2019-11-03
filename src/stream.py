@@ -4,19 +4,6 @@ import asyncio
 import random
 import speech2
 
-
-from google.oauth2 import service_account
-from google.cloud.speech import enums
-
-from src.speech_key import p
-
-videos = [
-    "https://billwurtz.com/might-quit.mp4",
-    "https://billwurtz.com/wild-frolicking-adventures-of-informational-education.mp4",
-    "https://billwurtz.com/at-the-airport-terminal.mp4",
-    "https://billwurtz.com/ball-and-stick.mp4"
-]
-credentials = service_account.Credentials. from_service_account_file(p)
 QQQ=16
 # Audio recording parameters
 RATE = 16000
@@ -54,7 +41,7 @@ async def get_video():
 
 
 async def play_videos(speechrecognizer):
-    url = videos[0]
+    url = random.choice(speech2.videos)
     cap = cv2.VideoCapture(url)
     loop = asyncio.get_event_loop()
     while True:
