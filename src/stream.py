@@ -1,3 +1,5 @@
+import datetime
+
 import cv2
 import time
 import asyncio
@@ -23,12 +25,25 @@ async def play_video(cap, recognizer):
     clip_length = 3
 
     loop = asyncio.get_event_loop()
-
+    time=0
+    text=""
     for frame in range(int(clip_length * fps)):
         try:
             ret, frame = cap.read()
+            frame = cv2.resize(frame,(1280,720))
             h, w, _ = frame.shape
-            cv2.putText(frame, await recognizer.get_text(), (10, h//2), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+            # print("h",h)
+            text2,success=await recognizer.get_text()
+            if success:
+                text=text2
+                time=datetime.datetime.now().timestamp()
+                print(text2,text,time)
+            elif abs(time-datetime.datetime.now().timestamp())>2:
+                print("abs",text2,text,time)
+                text=""
+            size=cv2.getTextSize(text,cv2.FONT_HERSHEY_SIMPLEX,2.25,2)
+            # print(size)
+            cv2.putText(frame, text, ((w-size[0][0])//2, (h-size[0][1])//2), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 255, 255), 2, cv2.LINE_AA)
             cv2.imshow("Ignitify", frame)
         except cv2.error:
             break

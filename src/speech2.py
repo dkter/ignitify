@@ -34,14 +34,14 @@ videos = [
 
 buzzwords=open("buzzwords.txt",'r').read().split("\n")
 
-service_region = "eastus2"
+service_region = "westus"
 
 speechconfig = speech.SpeechConfig(subscription=speech_key, region=service_region)
 speech_recognizer = speech.SpeechRecognizer(speech_config=speechconfig)
 
 
 def get_token():
-    fetch_token_url = "https://eastus2.api.cognitive.microsoft.com/sts/v1.0/issueToken"
+    fetch_token_url = "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken"
     headers = {
         'Ocp-Apim-Subscription-Key': speech_key
     }
@@ -55,23 +55,20 @@ class SpeechRecognizer:
     last_id = 0
     total=""
     b=" "
-
     async def get_text(self):
-        return self.speech_thing
+        tot=self.total+" "+self.speech_thing
+        t=tot[-2-sum([len(i) for i in tot.split()[-3:]]):].lower()
+        success=False
+        for i in buzzwords:
+            if i.lower() in t:
+                if i!=self.b:
+                    success=True
+                self.b=i
+        return self.b,success
 
     async def get_video(self):
         phrase=get_important(self.total.split()[-hist_len:-1])
 
-        print("total", self.total)
-        print("splite", self.total.split()[-3:])
-        print("sum", sum([len(i) for i in self.total.split()[-3:]]))
-        t=self.total[-sum([len(i) for i in self.total.split()[-3:]]):].lower()
-        self.b=" "
-        print("t",t)
-        for i in buzzwords:
-            if i.lower() in t:
-                self.b=i
-        print("buz",self.b)
         print("phrase",phrase)
         self.url, self.last_id = get_video(phrase, self.last_id)
         if not self.url:
@@ -80,8 +77,6 @@ class SpeechRecognizer:
 
         return self.url
 
-    async def get_buzz(self):
-        return self.b
 
     def on_recognizing(self, args):
         self.speech_thing = (args.result.text)

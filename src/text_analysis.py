@@ -23,9 +23,7 @@ def find_freq(l,x):
 good=['FW', 'JJ', 'JJR', 'JJS', 'NN', 'NNS', 'NNP', 'NPS', 'RB', 'RBR', 'RBS', 'RP', 'VB', 'VBD', 'VBG', 'VBN', 'VBZ', 'WP', 'WRB']
 def get_important(splitted:List[str]):
     print("split",splitted)
-    print("aaa")
     freq_r = rake_nltk.Rake(max_length=3, ranking_metric=Metric.WORD_FREQUENCY)
-    print("bb")
     freq_r.extract_keywords_from_text(" and ".join(splitted))
     freq_phrases = freq_r.get_ranked_phrases()
 
@@ -43,6 +41,8 @@ def get_important(splitted:List[str]):
     print(part_of_speech)
     for i,part in part_of_speech:
         if part not in good:
+            data[i]*=0.5
+        if i in ['thing','things', 'yeah', 'yes', 'something','actually','really']:
             data[i]*=0.5
     """
 FW foreign word
