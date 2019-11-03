@@ -37,7 +37,7 @@ SNARE_START = 16
 BASS_START = 24
 MELODY_START = 32
 AAAAA_START = 40
-END = 64
+END = 256
 
 time     = 0    # In beats
 duration = 1    # In beats

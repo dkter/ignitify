@@ -11,7 +11,7 @@ def get_video(queries:List[str]):
     while q:
         response = sess.get('https://api.shutterstock.com/v2/videos/search',
                             params={'query':" ".join(q),
-                                    'sort': 'relevance',
+                                    'sort': 'random',
                                     'per_page': '1'}
                             )
         j=response.json()
