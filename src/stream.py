@@ -57,7 +57,6 @@ async def play_videos(speechrecognizer):
     url = videos[0]
     while True:
         print("Getting video !!!!!!!!!!!!!!!!!!!")
-        await asyncio.sleep(3)
         url_task = asyncio.create_task(speechrecognizer.get_video())
         await play_video(url)
         url = await url_task
