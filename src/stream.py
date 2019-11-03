@@ -27,9 +27,7 @@ def get_video_blocking():
     return random.choice(videos)
 
 
-async def play_video(url):
-    cap = cv2.VideoCapture(url)
-
+async def play_video(cap):
     fps=cap.get(cv2.CAP_PROP_FPS)
     mspf=int(1000/fps)
     clip_length = 5
@@ -55,11 +53,16 @@ async def get_video():
 
 async def play_videos(speechrecognizer):
     url = videos[0]
+    cap = cv2.VideoCapture(url)
+    loop = asyncio.get_event_loop()
     while True:
         print("Getting video !!!!!!!!!!!!!!!!!!!")
         url_task = asyncio.create_task(speechrecognizer.get_video())
-        await play_video(url)
+        cap_task = asyncio.ensure_future(loop.run_in_executor(None, cv2.VideoCapture, url))
+        print("p")
+        await play_video(cap)
         url = await url_task
+        cap = await cap_task
 
 
 cv2.namedWindow("Ignitify", cv2.WINDOW_NORMAL)
