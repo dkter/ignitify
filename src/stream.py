@@ -2,6 +2,11 @@ import cv2
 import time
 import asyncio
 import random
+import speech2
+
+
+from google.oauth2 import service_account
+from google.cloud.speech import enums
 
 videos = [
     "https://billwurtz.com/might-quit.mp4",
@@ -9,6 +14,11 @@ videos = [
     "https://billwurtz.com/at-the-airport-terminal.mp4",
     "https://billwurtz.com/ball-and-stick.mp4"
 ]
+credentials = service_account.Credentials. from_service_account_file(r'C:\Users\dkter\Downloads\My First Project-4397387e7cb5.json')
+QQQ=16
+# Audio recording parameters
+RATE = 16000
+CHUNK = int(RATE / 10)  # 100ms
 
 def get_video_blocking():
     print("Get video 1")
@@ -43,17 +53,46 @@ async def get_video():
     return await loop.run_in_executor(None, get_video_blocking)
 
 
-async def play_videos():
+async def play_videos(speechrecognizer):
     url = videos[0]
-    for i in range(3):
-        url_task = asyncio.create_task(get_video())
+    while True:
+        print("Getting video !!!!!!!!!!!!!!!!!!!")
+        await asyncio.sleep(3)
+        url_task = asyncio.create_task(speechrecognizer.get_video())
         await play_video(url)
         url = await url_task
 
 
+# print("START")
+# # See http://g.co/cloud/speech/docs/languages
+# # for a list of supported languages.
+# language_code = 'en-US'  # a BCP-47 language tag
+
+# client = speech.speech.SpeechClient(credentials=credentials)
+# print("CLIENTED")
+# config = speech.types.RecognitionConfig(
+#     encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+#     sample_rate_hertz=RATE,
+#     language_code=language_code)
+# streaming_config = speech.types.StreamingRecognitionConfig(
+#     config=config,
+#     interim_results=True)
+
+# print("WITH")
+# with speech.MicrophoneStream(RATE, CHUNK) as stream:
+#     audio_generator = stream.generator()
+#     requests = (speech.types.StreamingRecognizeRequest(audio_content=content)
+#                 for content in audio_generator)
+#     responses = client.streaming_recognize(streaming_config, requests)
+
+#     # Now, put the transcription responses to use.
+#     speechrecognizer = speech.SpeechRecognizer()
+
 loop = asyncio.get_event_loop()
-
-loop.run_until_complete(play_videos())
-
+speechrecognizer = speech2.SpeechRecognizer()
+loop.run_until_complete(asyncio.gather(
+    speechrecognizer.recognize(),
+    play_videos(speechrecognizer)
+))
 
 cv2.destroyAllWindows()
