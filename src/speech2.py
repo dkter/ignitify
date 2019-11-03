@@ -11,13 +11,25 @@ import random
 from speech import QQQ
 
 videos = [
-    "videos/1-converted.mp4",
-    "videos/2-converted.mp4",
-    "videos/3-converted.mp4",
-    "videos/4-converted.mp4",
-    "videos/5-converted.mp4",
-    "videos/6-converted.mp4",
-    "videos/7-converted.mp4",
+    "videos/1.mp4",
+    "videos/2.mp4",
+    "videos/3.mp4",
+    "videos/4.mp4",
+    "videos/5.mp4",
+    "videos/6.mp4",
+    "videos/7.mp4",
+    "videos/8.mp4",
+    "videos/9.mp4",
+    "videos/10.mp4",
+    "videos/11.mp4",
+    "videos/12.mp4",
+    "videos/13.mp4",
+    "videos/14.mp4",
+    "videos/15.mp4",
+    "videos/16.mp4",
+    "videos/17.mp4",
+    "videos/18.mp4",
+    "videos/19.mp4",
 ]
 
 service_region = "eastus2"
@@ -38,11 +50,17 @@ def get_token():
 class SpeechRecognizer:
     url = random.choice(videos)
     speech_thing = ""
+    last_id = 0
     total=""
+    async def get_text(self):
+        return self.speech_thing
+
     async def get_video(self):
         phrase=get_important(self.total.split()[-QQQ:-1])
         print("phrase",phrase)
-        self.url = get_video(phrase) or self.url
+        self.url, self.last_id = get_video(phrase, self.last_id)
+        if not self.url:
+            self.url = random.choice([v for v in videos if v != self.url])
         print("url",self.url)
         return self.url
 

@@ -16,7 +16,7 @@ def get_video_blocking():
     return random.choice(videos)
 
 
-async def play_video(cap):
+async def play_video(cap, recognizer):
     fps=cap.get(cv2.CAP_PROP_FPS)
     mspf=int(1000/fps)
     clip_length = 2
@@ -27,7 +27,7 @@ async def play_video(cap):
         try:
             ret, frame = cap.read()
             h, w, _ = frame.shape
-            cv2.putText(frame, "DISRUPTIVE", (w//2 - 100, h//2), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+            cv2.putText(frame, await recognizer.get_text(), (10, h//2), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
             cv2.imshow("Ignitify", frame)
         except cv2.error:
             break
@@ -51,7 +51,7 @@ async def play_videos(speechrecognizer):
         print("Getting video !!!!!!!!!!!!!!!!!!!")
         cap_task = asyncio.create_task(get_video(speechrecognizer))
         print("p")
-        await play_video(cap)
+        await play_video(cap, speechrecognizer)
         cap = await cap_task
 
 
