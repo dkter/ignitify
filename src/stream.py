@@ -62,30 +62,8 @@ async def play_videos(speechrecognizer):
         url = await url_task
 
 
-# print("START")
-# # See http://g.co/cloud/speech/docs/languages
-# # for a list of supported languages.
-# language_code = 'en-US'  # a BCP-47 language tag
-
-# client = speech.speech.SpeechClient(credentials=credentials)
-# print("CLIENTED")
-# config = speech.types.RecognitionConfig(
-#     encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-#     sample_rate_hertz=RATE,
-#     language_code=language_code)
-# streaming_config = speech.types.StreamingRecognitionConfig(
-#     config=config,
-#     interim_results=True)
-
-# print("WITH")
-# with speech.MicrophoneStream(RATE, CHUNK) as stream:
-#     audio_generator = stream.generator()
-#     requests = (speech.types.StreamingRecognizeRequest(audio_content=content)
-#                 for content in audio_generator)
-#     responses = client.streaming_recognize(streaming_config, requests)
-
-#     # Now, put the transcription responses to use.
-#     speechrecognizer = speech.SpeechRecognizer()
+cv2.namedWindow("Ignitify", cv2.WINDOW_NORMAL)
+cv2.resizeWindow("Ignitify", 1280, 720)
 
 loop = asyncio.get_event_loop()
 speechrecognizer = speech2.SpeechRecognizer()
