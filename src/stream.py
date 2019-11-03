@@ -8,13 +8,15 @@ import speech2
 from google.oauth2 import service_account
 from google.cloud.speech import enums
 
+from src.speech_key import p
+
 videos = [
     "https://billwurtz.com/might-quit.mp4",
     "https://billwurtz.com/wild-frolicking-adventures-of-informational-education.mp4",
     "https://billwurtz.com/at-the-airport-terminal.mp4",
     "https://billwurtz.com/ball-and-stick.mp4"
 ]
-credentials = service_account.Credentials. from_service_account_file(r'C:\Users\dkter\Downloads\My First Project-4397387e7cb5.json')
+credentials = service_account.Credentials. from_service_account_file(p)
 QQQ=16
 # Audio recording parameters
 RATE = 16000

@@ -1,6 +1,6 @@
 from copy import copy
 from typing import List
-
+import random
 import requests
 
 sess=requests.Session()
@@ -10,14 +10,16 @@ def get_video(queries:List[str]):
     q=copy(queries)
     while q:
         response = sess.get('https://api.shutterstock.com/v2/videos/search',
-                            params={'query':" ".join(q),
-                                    'sort': 'random',
-                                    'per_page': '1'}
+                            params={'query':" ".join(q) + " NOT sad",
+                                    'sort': 'relevance',
+                                    'per_page': '5'}
                             )
         j=response.json()
         if 'data' in j:
             data=response.json()['data']
             if len(data)>0:
-                return data[0]['assets']['preview_mp4']['url']
+                qwwe=random.randrange(0,min(len(data),5))
+                print("qwwe",qwwe)
+                return data[qwwe]['assets']['preview_mp4']['url']
         del q[-1]
     return None

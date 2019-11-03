@@ -21,6 +21,7 @@ def find_freq(l,x):
     return 0.25
 
 def get_important(splitted:List[str]):
+    print("split",splitted)
     print("aaa")
     freq_r = rake_nltk.Rake(max_length=3, ranking_metric=Metric.WORD_FREQUENCY)
     print("bb")
@@ -37,8 +38,8 @@ def get_important(splitted:List[str]):
     for k,freq_v in freq_data.items():
         deg_v=deg_data[k]
         data[k]=freq_v+deg_v
-    print(deg_phrases)
-    print(deg_data)
-    print(freq_phrases)
-    print(freq_data)
+    print("deg_phrases",deg_phrases)
+    print("deg_data",deg_data)
+    print("freq_phrases",freq_phrases)
+    print("freq_data",freq_data)
     return [j[0] for j in sorted(data.items(),key=lambda i:-i[1])[:3]]

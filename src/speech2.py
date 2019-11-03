@@ -7,6 +7,8 @@ from shutterstock_utils import get_video
 from text_analysis import get_important
 from speech_key import speech_key
 
+from src.speech import QQQ
+
 service_region = "eastus2"
 
 speechconfig = speech.SpeechConfig(subscription=speech_key, region=service_region)
@@ -25,8 +27,9 @@ def get_token():
 class SpeechRecognizer:
     url = "https://billwurtz.com/snail-time.mp4"
     speech_thing = ""
+    total=""
     async def get_video(self):
-        phrase=get_important(self.speech_thing.split())
+        phrase=get_important(self.total.split()[-QQQ:-1])
         print("phrase",phrase)
         self.url = get_video(phrase) or self.url
         print("url",self.url)
@@ -34,6 +37,7 @@ class SpeechRecognizer:
 
     def on_recognizing(self, args):
         self.speech_thing = (args.result.text)
+        self.total+=f" {self.speech_thing}"
         #print(self.speech_thing)
 
     async def recognize(self):
