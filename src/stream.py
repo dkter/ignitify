@@ -26,6 +26,8 @@ async def play_video(cap):
     for frame in range(int(clip_length * fps)):
         try:
             ret, frame = cap.read()
+            h, w, _ = frame.shape
+            cv2.putText(frame, "DISRUPTIVE", (w//2 - 100, h//2), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
             cv2.imshow("Ignitify", frame)
         except cv2.error:
             break

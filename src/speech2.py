@@ -3,7 +3,7 @@ import os
 from azure.cognitiveservices import speech
 import requests
 import asyncio
-from shutterstock_utils import get_video
+from pixabay_utils import get_video
 from text_analysis import get_important
 from speech_key import speech_key
 import random
@@ -11,13 +11,13 @@ import random
 from speech import QQQ
 
 videos = [
-    "videos/1.mp4",
-    "videos/2.mp4",
-    "videos/3.mp4",
-    "videos/4.mp4",
-    "videos/5.mp4",
-    "videos/6.mp4",
-    "videos/7.mp4",
+    "videos/1-converted.mp4",
+    "videos/2-converted.mp4",
+    "videos/3-converted.mp4",
+    "videos/4-converted.mp4",
+    "videos/5-converted.mp4",
+    "videos/6-converted.mp4",
+    "videos/7-converted.mp4",
 ]
 
 service_region = "eastus2"
