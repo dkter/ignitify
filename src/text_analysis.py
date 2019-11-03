@@ -3,7 +3,7 @@ from typing import List
 
 import rake_nltk
 from rake_nltk import Metric
-
+import nltk
 def find_deg(l, x):
     t = len(l)
     for i in l:
@@ -20,6 +20,7 @@ def find_freq(l,x):
         return 1-l.index(x)/len(l)
     return 0.25
 
+good=['FW', 'JJ', 'JJR', 'JJS', 'NN', 'NNS', 'NNP', 'NPS', 'RB', 'RBR', 'RBS', 'RP', 'VB', 'VBD', 'VBG', 'VBN', 'VBZ', 'WP', 'WRB']
 def get_important(splitted:List[str]):
     print("split",splitted)
     print("aaa")
@@ -38,8 +39,34 @@ def get_important(splitted:List[str]):
     for k,freq_v in freq_data.items():
         deg_v=deg_data[k]
         data[k]=freq_v+deg_v
-    print("deg_phrases",deg_phrases)
-    print("deg_data",deg_data)
-    print("freq_phrases",freq_phrases)
-    print("freq_data",freq_data)
+    part_of_speech=nltk.pos_tag(splitted)
+    print(part_of_speech)
+    for i,part in part_of_speech:
+        if part not in good:
+            data[i]*=0.5
+    """
+FW foreign word
+JJ adjective 'big'
+JJR adjective, comparative 'bigger'
+JJS adjective, superlative 'biggest'
+NN noun, singular 'desk'
+NNS noun plural 'desks'
+NNP proper noun, singular 'Harrison'
+NNPS proper noun, plural 'Americans'
+RB adverb very, silently,
+RBR adverb, comparative better
+RBS adverb, superlative best
+RP particle give up
+VB verb, base form take
+VBD verb, past tense took
+VBG verb, gerund/present participle taking
+VBN verb, past participle taken
+VBZ verb, 3rd person sing. present takes
+WP wh-pronoun who, what
+WRB wh-abverb where, when
+"""
+    # print("deg_phrases",deg_phrases)
+    # print("deg_data",deg_data)
+    # print("freq_phrases",freq_phrases)
+    # print("freq_data",freq_data)
     return [j[0] for j in sorted(data.items(),key=lambda i:-i[1])[:3]]

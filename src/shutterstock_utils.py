@@ -12,14 +12,14 @@ def get_video(queries:List[str]):
         response = sess.get('https://api.shutterstock.com/v2/videos/search',
                             params={'query':" ".join(q) + " NOT sad",
                                     'sort': 'relevance',
-                                    'per_page': '5'}
+                                    'per_page': '8'}
                             )
         j=response.json()
         if 'data' in j:
             data=response.json()['data']
             if len(data)>0:
-                qwwe=random.randrange(0,min(len(data),5))
-                print("qwwe",qwwe)
+                qwwe=random.randrange(0,min(len(data),7))
+                print("rand",qwwe,qwwe==len(data))
                 return data[qwwe]['assets']['preview_mp4']['url']
         del q[-1]
     return None

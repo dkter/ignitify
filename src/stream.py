@@ -2,7 +2,8 @@ import cv2
 import time
 import asyncio
 import random
-import speech2
+from src import speech2
+from src.speech2 import videos
 
 QQQ=16
 # Audio recording parameters
@@ -19,7 +20,7 @@ def get_video_blocking():
 async def play_video(cap, recognizer):
     fps=cap.get(cv2.CAP_PROP_FPS)
     mspf=int(1000/fps)
-    clip_length = 2
+    clip_length = 3
 
     loop = asyncio.get_event_loop()
 
@@ -45,6 +46,7 @@ async def get_video(speechrecognizer):
 
 async def play_videos(speechrecognizer):
     url = random.choice(speech2.videos)
+    b=" "
     cap = cv2.VideoCapture(url)
     loop = asyncio.get_event_loop()
     while True:
