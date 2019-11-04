@@ -42,8 +42,9 @@ def get_important(splitted:List[str]):
     for i,part in part_of_speech:
         if part not in good:
             data[i]*=0.5
-        if i in ['thing','things', 'yeah', 'yes', 'something','actually','really']:
-            data[i]*=0.5
+        if i.lower() in ['thing','things', 'yeah', 'yes', 'something','actually','really', 'life', 'lives', 'lot', 'ok', 'oh', 'well', 'stuff', 'talking', 'look', 'looking', 'talking',
+                         'isn\'t', 'that\'s', 'right']:
+            data[i]*=0.1
     """
 FW foreign word
 JJ adjective 'big'

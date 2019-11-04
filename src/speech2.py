@@ -3,12 +3,12 @@ import os
 from azure.cognitiveservices import speech
 import requests
 import asyncio
-from src.pixabay_utils import get_video
-from src.text_analysis import get_important
-from src.speech_key import speech_key
+from pixabay_utils import get_video
+from text_analysis import get_important
+from speech_key import speech_key
 import random
 
-from src.speech import hist_len
+from speech import hist_len
 
 videos = [
     "videos/1.mp4",

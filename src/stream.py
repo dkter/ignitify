@@ -4,8 +4,8 @@ import cv2
 import time
 import asyncio
 import random
-from src import speech2
-from src.speech2 import videos
+import speech2
+from speech2 import videos
 
 QQQ=16
 # Audio recording parameters
@@ -37,13 +37,11 @@ async def play_video(cap, recognizer):
             if success:
                 text=text2
                 time=datetime.datetime.now().timestamp()
-                print(text2,text,time)
             elif abs(time-datetime.datetime.now().timestamp())>2:
-                print("abs",text2,text,time)
                 text=""
             size=cv2.getTextSize(text,cv2.FONT_HERSHEY_SIMPLEX,2.25,2)
             # print(size)
-            cv2.putText(frame, text, ((w-size[0][0])//2, (h-size[0][1])//2), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 255, 255), 2, cv2.LINE_AA)
+            cv2.putText(frame, text, ((w-size[0][0])//2, (h-size[0][1])//2), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (255, 255, 255), 3, cv2.LINE_AA)
             cv2.imshow("Ignitify", frame)
         except cv2.error:
             break
